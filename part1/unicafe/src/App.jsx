@@ -17,14 +17,34 @@ const Statistics = (props) => {
   const positivePercentage = (good / totalFeedback) * 100;
 
   return (
-    <div>
-      <p>good : {good}</p>
-      <p>neutral : {neutral}</p>
-      <p>bad : {bad}</p>
-      <p>Total feedbacks: {totalFeedback}</p>
-      <p>Average score: {average}</p>
-      <p>Positive feedback percentage: {positivePercentage}%</p>
-    </div>
+    <table>
+      <tbody>
+        <tr>
+          <td>Good:</td>
+          <td>{good}</td>
+        </tr>
+        <tr>
+          <td>Neutral:</td>
+          <td>{neutral}</td>
+        </tr>
+        <tr>
+          <td>Bad:</td>
+          <td>{bad}</td>
+        </tr>
+        <tr>
+          <td>Total feedbacks:</td>
+          <td>{totalFeedback}</td>
+        </tr>
+        <tr>
+          <td>Average score:</td>
+          <td>{average}</td>
+        </tr>
+        <tr>
+          <td>Positive feedback percentage:</td>
+          <td>{positivePercentage}%</td>
+        </tr>
+      </tbody>
+    </table>
   );
 };
 

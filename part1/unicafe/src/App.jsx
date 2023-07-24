@@ -11,6 +11,12 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const handleClick = () => {
+    setGood((prevState) => prevState + 1);
+    setNeutral((prevState) => prevState + 1);
+    setBad((prevState) => prevState + 1);
+  };
+
   return (
     <>
       <h1>give feedback</h1>

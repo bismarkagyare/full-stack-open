@@ -33,10 +33,13 @@ const App = () => {
 
   return (
     <div>
-      <div>{anecdotes[selected]}</div>
-      <p>has {votes[selected]} votes</p>
-      <Button text="vote" handleClick={handleVote} />
-      <Button text="next anecdote" handleClick={handleClick} />
+      <div>
+        <h2>Anecdote of the Day</h2>
+        <div>{anecdotes[selected]}</div>
+        <p>has {votes[selected]} votes</p>
+        <Button text="vote" handleClick={handleVote} />
+        <Button text="next anecdote" handleClick={handleClick} />
+      </div>
     </div>
   );
 };

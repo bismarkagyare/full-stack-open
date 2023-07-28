@@ -7,11 +7,15 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    const personObject = {
-      name: newName,
-    };
-    setPersons(persons.concat(personObject));
-    setNewName('');
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} already exist`);
+    } else {
+      const personObject = {
+        name: newName,
+      };
+      setPersons(persons.concat(personObject));
+      setNewName('');
+    }
   };
 
   const handleNameInput = (e) => {

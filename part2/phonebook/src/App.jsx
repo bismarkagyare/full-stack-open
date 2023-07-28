@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
+import Filter from './Components/Filter';
+import PersonForm from './Components/PersonForm';
+import Persons from './Components/Persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -43,34 +46,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        <label htmlFor="filter">Filter shown with</label>
-        <input id="filter" value={filterValue} onChange={handleFilterInput} />
-      </div>
+      <Filter value={filterValue} onChange={handleFilterInput} />
       <h2>Add a new item</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameInput} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberInput} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onSubmit={addName}
+        newName={newName}
+        handleNameInput={handleNameInput}
+        newNumber={newNumber}
+        handleNumberInput={handleNumberInput}
+      />
       <h2>Numbers</h2>
-      {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(filterValue.toLowerCase())
-        )
-        .map((person) => {
-          return (
-            <p key={person.id}>
-              {person.name} {person.number}
-            </p>
-          );
-        })}
+      <Persons persons={persons} filterValue={filterValue} />
     </div>
   );
 };

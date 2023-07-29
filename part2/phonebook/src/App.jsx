@@ -30,7 +30,6 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
 
       personService.create(personObject).then((initialDetails) => {
@@ -38,6 +37,20 @@ const App = () => {
         setNewName('');
         setNewNumber('');
       });
+    }
+  };
+
+  const handleDelete = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+    if (personToDelete && window.confirm(`Delete ${personToDelete.name}?`)) {
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          console.error('Error deleting person:', error);
+        });
     }
   };
 
@@ -66,7 +79,11 @@ const App = () => {
         handleNumberInput={handleNumberInput}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterValue={filterValue} />
+      <Persons
+        persons={persons}
+        filterValue={filterValue}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };

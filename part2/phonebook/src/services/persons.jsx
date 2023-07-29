@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 const baseUrl = 'http://localhost:3000/persons';
 
@@ -11,4 +12,9 @@ const create = (personObject) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create };
+const deletePerson = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`);
+  return request.then((response) => {});
+};
+
+export default { getAll, create, deletePerson };

@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
-import Filter from './Components/Filter';
-import PersonForm from './Components/PersonForm';
-import Persons from './Components/Persons';
-import axios from 'axios';
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+import personService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,12 +13,12 @@ const App = () => {
 
   //prettier-ignore
   const hook = () => {
-    axios
-      .get('http://localhost:3000/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }
+    personService
+      .getAll()
+      .then(initialDetails => {
+        setPersons(initialDetails)
+      });
+  };
 
   useEffect(hook, []);
 
@@ -32,9 +32,12 @@ const App = () => {
         number: newNumber,
         id: persons.length + 1,
       };
-      setPersons(persons.concat(personObject));
-      setNewName('');
-      setNewNumber('');
+
+      personService.create(personObject).then((initialDetails) => {
+        setPersons(persons.concat(initialDetails));
+        setNewName('');
+        setNewNumber('');
+      });
     }
   };
 

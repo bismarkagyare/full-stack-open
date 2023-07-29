@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-const Persons = ({ persons, filterValue }) => {
+const Persons = ({ persons, filterValue, handleDelete }) => {
   return (
     <div>
       {persons
@@ -10,6 +10,7 @@ const Persons = ({ persons, filterValue }) => {
           return (
             <p key={person.id}>
               {person.name} {person.number}
+              <button onClick={() => handleDelete(person.id)}>delete</button>
             </p>
           );
         })}

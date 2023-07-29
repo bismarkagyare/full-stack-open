@@ -1,39 +1,24 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
+      "name": "Kawtar Barouti",
+      "number": "39-44-5323523",
       "id": 1
     },
     {
-      "name": "Kawtar Barouti",
-      "number": "39-44-5323523",
+      "name": "Phil Dunphy",
+      "number": "39-77-5323523",
       "id": 2
     },
     {
-      "name": "Phil Dunphy",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
       "name": "Cillian Murphy",
-      "number": "39-23-6423122",
+      "number": "345-0998-09",
       "id": 4
     },
     {
-      "name": "Kendrick Lamar",
-      "number": "90-123-4584",
+      "name": "Leo Messi",
+      "number": "45-098-098",
       "id": 5
-    },
-    {
-      "name": "Lionel Messi",
-      "number": "12-0984573",
-      "id": 6
-    },
-    {
-      "name": "Marcus Rashford",
-      "number": "789-098-231",
-      "id": 7
     }
   ]
 }

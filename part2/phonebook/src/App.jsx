@@ -4,12 +4,16 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/persons';
+import Notification from './components/Notification';
+import './index.css';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterValue, setFilterValue] = useState('');
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [deletionMessage, setDeletionMessage] = useState(null);
 
   //prettier-ignore
   const hook = () => {
@@ -24,12 +28,19 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
+
+    if (!newName || !newNumber) {
+      alert('Please fill in both name and number fields.');
+      return;
+    }
+
     const existingPerson = persons.find((person) => person.name === newName);
     const confirmReplacement = existingPerson
       ? window.confirm(
           `${newName} already added to phonebook, replace the old number with a new one?`
         )
       : false;
+
     if (existingPerson && confirmReplacement) {
       replaceExistingNumber(existingPerson.id);
     } else {
@@ -42,6 +53,11 @@ const App = () => {
         setPersons(persons.concat(initialDetails));
         setNewName('');
         setNewNumber('');
+
+        setSuccessMessage(`${newName} was added`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
       });
     }
   };
@@ -63,6 +79,11 @@ const App = () => {
         .deletePerson(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
+
+          setDeletionMessage(`${personToDelete.name} was deleted`);
+          setTimeout(() => {
+            setDeletionMessage(null);
+          }, 3000);
         })
         .catch((error) => {
           console.error('Error deleting person:', error);
@@ -85,6 +106,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} type="success" />
+      <Notification message={deletionMessage} type="delete" />
       <Filter value={filterValue} onChange={handleFilterInput} />
       <h2>Add a new item</h2>
       <PersonForm

@@ -7,13 +7,8 @@
     },
     {
       "name": "Phil Dunphy",
-      "number": "12-2340988",
+      "number": "999-323-777",
       "id": 2
-    },
-    {
-      "name": "Cillian Murphy",
-      "number": "345-0998-09",
-      "id": 4
     },
     {
       "name": "Leo Messi",
@@ -21,24 +16,9 @@
       "id": 5
     },
     {
-      "name": "King Kendrick",
-      "number": "34-098-998",
+      "name": "Cillian Murphy",
+      "number": "657-000-789",
       "id": 6
-    },
-    {
-      "name": "Kanye West",
-      "number": "456-234-222",
-      "id": 7
-    },
-    {
-      "name": "Cam Tucker",
-      "number": "666-000-999",
-      "id": 8
-    },
-    {
-      "name": "Marcus Rashford",
-      "number": "777-00-999",
-      "id": 9
     }
   ]
 }

@@ -14,6 +14,7 @@ const App = () => {
   const [filterValue, setFilterValue] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
   const [deletionMessage, setDeletionMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   //prettier-ignore
   const hook = () => {
@@ -54,7 +55,7 @@ const App = () => {
         setNewName('');
         setNewNumber('');
 
-        setSuccessMessage(`${newName} was added`);
+        setSuccessMessage(`${newName} was successfully added`);
         setTimeout(() => {
           setSuccessMessage(null);
         }, 3000);
@@ -65,11 +66,16 @@ const App = () => {
   const replaceExistingNumber = (id) => {
     const person = persons.find((person) => person.id === id);
     const updatedPerson = { ...person, number: newNumber };
-    personService.update(id, updatedPerson).then((returnedDetails) => {
-      setPersons(persons.map((p) => (p.id === id ? returnedDetails : p)));
-      setNewName('');
-      setNewNumber('');
-    });
+    personService
+      .update(id, updatedPerson)
+      .then((returnedDetails) => {
+        setPersons(persons.map((p) => (p.id === id ? returnedDetails : p)));
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleDelete = (id) => {
@@ -78,16 +84,21 @@ const App = () => {
       personService
         .deletePerson(id)
         .then(() => {
-          setPersons(persons.filter((person) => person.id !== id));
-
-          setDeletionMessage(`${personToDelete.name} was deleted`);
+          setDeletionMessage(`${personToDelete.name} was successfully deleted`);
           setTimeout(() => {
             setDeletionMessage(null);
           }, 3000);
         })
         .catch((error) => {
           console.error('Error deleting person:', error);
+          setErrorMessage(
+            `${personToDelete.name} has already been removed from the server`
+          );
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
         });
+      setPersons(persons.filter((person) => person.id !== id));
     }
   };
 
@@ -108,6 +119,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Notification message={successMessage} type="success" />
       <Notification message={deletionMessage} type="delete" />
+      <Notification message={errorMessage} type="error" />
       <Filter value={filterValue} onChange={handleFilterInput} />
       <h2>Add a new item</h2>
       <PersonForm

@@ -1,49 +1,52 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const App = () => {
-  const [search, setSearch] = useState('');
   const [countries, setCountries] = useState([]);
-  const [countriesSearch, setCountriesSearch] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // Fetch all countries when the page loads
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const countriesData = await axios.get(
-          'https://restcountries.com/v3.1/all'
-        );
-        setCountries(countriesData.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then((response) => setCountries(response.data))
+      .catch((error) => console.error('Error fetching countries:', error));
   }, []);
 
-  useEffect(() => {
-    setCountriesSearch(
-      countries.filter((country) =>
-        country.name.common.toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search, countries]);
-
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
+  const handleSearchChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
   };
 
+  const filteredCountries = countries.filter((country) =>
+    country.name.common.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const displayMessage = searchQuery && filteredCountries.length > 10;
+
   return (
-    <>
-      <form>
-        <label htmlFor="find countries">find countries: </label>
-        <input type="text" value={search} onChange={handleSearch} />
-      </form>
-      <div>
-        {countriesSearch.map((country) => {
-          return <p key={country.cca3}>{country.name.common}</p>;
-        })}
-      </div>
-    </>
+    <div>
+      <label htmlFor="countrySearch">Search for a country: </label>
+      <input
+        type="text"
+        id="countrySearch"
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+
+      {displayMessage && (
+        <p>Too many matches, make your query more specific.</p>
+      )}
+
+      <ul>
+        {(searchQuery && filteredCountries.length <= 10
+          ? filteredCountries
+          : countries
+        ).map((country) => (
+          <li key={country.cca3}>{country.name.common}</li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

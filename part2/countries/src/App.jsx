@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch all countries when the page loads
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')
@@ -13,8 +12,8 @@ const App = () => {
       .catch((error) => console.error('Error fetching countries:', error));
   }, []);
 
-  const handleSearchChange = (event) => {
-    const query = event.target.value;
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
     setSearchQuery(query);
   };
 
@@ -23,10 +22,11 @@ const App = () => {
   );
 
   const displayMessage = searchQuery && filteredCountries.length > 10;
+  const countryInfo = searchQuery && filteredCountries.length === 1;
 
   return (
     <div>
-      <label htmlFor="countrySearch">Search for a country: </label>
+      <label htmlFor="countrySearch">find countries: </label>
       <input
         type="text"
         id="countrySearch"
@@ -38,14 +38,34 @@ const App = () => {
         <p>Too many matches, make your query more specific.</p>
       )}
 
-      <ul>
-        {(searchQuery && filteredCountries.length <= 10
-          ? filteredCountries
-          : countries
-        ).map((country) => (
-          <li key={country.cca3}>{country.name.common}</li>
+      {countryInfo &&
+        filteredCountries.map((country) => (
+          <div key={country.cca3}>
+            <h1>{country.name.common}</h1>
+            <p>capital:{country.capital}</p>
+            <p>area:{country.area}</p>
+            <h3>Languages</h3>
+            <ul>
+              {Object.entries(country.languages).map(([key, value]) => (
+                <li key={key}>{value}</li>
+              ))}
+            </ul>
+            <p>flag:{country.flag}</p>
+          </div>
         ))}
-      </ul>
+
+      {!countryInfo && (
+        <ul>
+          {searchQuery === ''
+            ? countries.map((country) => (
+                <li key={country.cca3}>{country.name.common}</li>
+              ))
+            : filteredCountries.length <= 10 &&
+              filteredCountries.map((country) => (
+                <li key={country.cca3}>{country.name.common}</li>
+              ))}
+        </ul>
+      )}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import CountryList from './components/countryList';
+import CountryDetails from './components/countryDetails';
 
 const App = () => {
   const [countries, setCountries] = useState([]);
@@ -38,33 +40,14 @@ const App = () => {
         <p>Too many matches, make your query more specific.</p>
       )}
 
-      {countryInfo &&
-        filteredCountries.map((country) => (
-          <div key={country.cca3}>
-            <h1>{country.name.common}</h1>
-            <p>capital:{country.capital}</p>
-            <p>area:{country.area}</p>
-            <h3>Languages</h3>
-            <ul>
-              {Object.entries(country.languages).map(([key, value]) => (
-                <li key={key}>{value}</li>
-              ))}
-            </ul>
-            <p>flag:{country.flag}</p>
-          </div>
-        ))}
+      {countryInfo && <CountryDetails country={filteredCountries[0]} />}
 
       {!countryInfo && (
-        <ul>
-          {searchQuery === ''
-            ? countries.map((country) => (
-                <li key={country.cca3}>{country.name.common}</li>
-              ))
-            : filteredCountries.length <= 10 &&
-              filteredCountries.map((country) => (
-                <li key={country.cca3}>{country.name.common}</li>
-              ))}
-        </ul>
+        <CountryList
+          countries={countries}
+          searchQuery={searchQuery}
+          filteredCountries={filteredCountries}
+        />
       )}
     </div>
   );

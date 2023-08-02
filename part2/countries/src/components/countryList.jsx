@@ -6,7 +6,6 @@ const CountryList = ({ countries, searchQuery, filteredCountries }) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
-    // Reset selectedCountry when the searchQuery becomes empty
     if (searchQuery === '') {
       setSelectedCountry(null);
     }

@@ -1,3 +1,5 @@
+import WeatherReport from './WeatherReport';
+
 const CountryDetails = ({ country }) => {
   const { name, capital, area, languages, flag } = country;
 
@@ -13,6 +15,8 @@ const CountryDetails = ({ country }) => {
         ))}
       </ul>
       <p>flag: {flag}</p>
+      <h2>Weather in {capital}</h2>
+      <WeatherReport city={capital} />
     </div>
   );
 };

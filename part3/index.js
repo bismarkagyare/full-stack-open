@@ -69,6 +69,11 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
+  const existingPerson = persons.find((person) => person.name === name);
+  if (existingPerson) {
+    res.status(409).json({ error: 'Name already exist' });
+  }
+
   const person = {
     name: name,
     number: number,

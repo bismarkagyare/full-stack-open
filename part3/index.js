@@ -1,6 +1,15 @@
 const express = require('express');
 const app = express();
 
+//add timestamp middleware
+const addTimestampAndPersonsCount = (req, res, next) => {
+  res.locals.timestamp = new Date().toLocaleString();
+  res.locals.personsCount = persons.length;
+  next();
+};
+
+app.use(addTimestampAndPersonsCount);
+
 const persons = [
   {
     id: 1,
@@ -30,6 +39,14 @@ app.get('/', (req, res) => {
 
 app.get('/api/persons', (req, res) => {
   res.json(persons);
+});
+
+app.get('/info', (req, res) => {
+  const timestamp = res.locals.timestamp;
+  const personsCount = res.locals.personsCount;
+  res.send(
+    `Phonebook has info for ${personsCount} people<br>The request was received at: ${timestamp}`
+  );
 });
 
 const PORT = 3001;

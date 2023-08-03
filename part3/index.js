@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 //add timestamp middleware
 const addTimestampAndPersonsCount = (req, res, next) => {
@@ -51,11 +52,40 @@ app.get('/api/persons/:id', (req, res) => {
   }
 });
 
+//prettier-ignore
+const generatedId = () => {
+  const maxId = persons.length > 0 
+    ? Math.max(...persons.map(p => p.id))
+    : 0;
+  return maxId + 1;
+};
+
+app.post('/api/persons', (req, res) => {
+  //extract the body of the req
+  const { name, number } = req.body;
+  if (!name || !number) {
+    return res.status(400).json({
+      error: 'both name and number is required',
+    });
+  }
+
+  const person = {
+    name: name,
+    number: number,
+    id: generatedId(),
+  };
+
+  persons = persons.concat(person);
+
+  console.log(person);
+  res.json(person);
+});
+
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((person) => person.id !== id);
 
-  response.status(204).end();
+  res.status(204).end();
 });
 
 app.get('/info', (req, res) => {

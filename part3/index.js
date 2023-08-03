@@ -35,7 +35,7 @@ let persons = [
 ];
 
 app.get('/', (req, res) => {
-  res.send('<h1>hi there, im learing express</h1>');
+  res.send('<h1>hi there, im learning express</h1>');
 });
 
 app.get('/api/persons', (req, res) => {

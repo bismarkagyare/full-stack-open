@@ -16,7 +16,6 @@ app.use(
   )
 );
 
-//add timestamp middleware
 const addTimestampAndPersonsCount = (req, res, next) => {
   res.locals.timestamp = new Date().toLocaleString();
   res.locals.personsCount = persons.length;

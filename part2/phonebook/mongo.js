@@ -14,19 +14,19 @@ const url = `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/?ret
 mongoose.set('strictQuery', false);
 mongoose.connect(url);
 
-const noteSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   content: String,
   important: Boolean,
 });
 
-const Note = mongoose.model('Note', noteSchema);
+const Person = mongoose.model('Person', personSchema);
 
-const note = new Note({
+const person = new Person({
   content: 'HTML is Easy',
   important: true,
 });
 
-note.save().then((result) => {
-  console.log('note saved!');
+person.save().then((result) => {
+  console.log('person saved!');
   mongoose.connection.close();
 });

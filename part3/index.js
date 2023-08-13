@@ -59,13 +59,19 @@ app.get('/api/persons', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  const id = req.params.id;
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.log('Error fetching person:', error.message);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
 //prettier-ignore
@@ -90,11 +96,14 @@ app.post('/api/persons', (req, res) => {
     res.status(409).json({ error: 'Name already exist' });
   }
 
-  const person = {
+  const person = new Person({
     name: name,
     number: number,
-    id: generatedId(),
-  };
+  });
+
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 
   persons = persons.concat(person);
 

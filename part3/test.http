@@ -1,2 +1,8 @@
 
-GET https://dark-fog-9585.fly.dev/api/persons HTTP/1.1
+POST http://localhost:3001/api/persons HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Annabelle Brown",
+  "number": "671-009-8888"
+}

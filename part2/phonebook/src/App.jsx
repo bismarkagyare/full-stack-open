@@ -50,16 +50,21 @@ const App = () => {
         number: newNumber,
       };
 
-      personService.create(personObject).then((initialDetails) => {
-        setPersons(persons.concat(initialDetails));
-        setNewName('');
-        setNewNumber('');
+      personService
+        .create(personObject)
+        .then((initialDetails) => {
+          setPersons(persons.concat(initialDetails));
+          setNewName('');
+          setNewNumber('');
 
-        setSuccessMessage(`${newName} was successfully added`);
-        setTimeout(() => {
-          setSuccessMessage(null);
-        }, 3000);
-      });
+          setSuccessMessage(`${newName} was successfully added`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+        });
     }
   };
 

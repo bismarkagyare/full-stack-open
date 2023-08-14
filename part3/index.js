@@ -112,7 +112,11 @@ app.put('/api/persons/:id', (req, res, next) => {
       };
 
       // Update the person's information in the database
-      Person.findByIdAndUpdate(req.params.id, person, { new: true })
+      Person.findByIdAndUpdate(req.params.id, person, {
+        new: true,
+        runValidators: true,
+        context: 'query',
+      })
         .then((updatedPerson) => {
           // Send the updated person's information as the response
           res.json(updatedPerson);
@@ -136,7 +140,7 @@ app.delete('/api/persons/:id', (req, res) => {
 app.use(addTimestampAndPersonsCount);
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -93,6 +93,35 @@ app.post('/api/persons', (req, res) => {
     });
 });
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body;
+
+  // Check if there's a person with the same name as the updated name
+  Person.findOne({ name: name })
+    .then((existingPerson) => {
+      // If a person with the same name exists, and it's not the same person being updated
+      if (existingPerson && existingPerson.id.toString() !== req.params.id) {
+        // Send a 409 Conflict response indicating that the name already exists
+        return res.status(409).json({ error: 'Name already exists' });
+      }
+
+      // If the name is unique or the same person is being updated, proceed to update
+      const person = {
+        name: name,
+        number: number,
+      };
+
+      // Update the person's information in the database
+      Person.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then((updatedPerson) => {
+          // Send the updated person's information as the response
+          res.json(updatedPerson);
+        })
+        .catch((error) => next(error));
+    })
+    .catch((error) => next(error));
+});
+
 app.delete('/api/persons/:id', (req, res) => {
   Person.findByIdAndRemove(req.params.id)
     .then((result) => {

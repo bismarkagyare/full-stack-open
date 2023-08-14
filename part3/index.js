@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
+const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./models/person');
 
-const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static('dist'));
@@ -22,31 +22,6 @@ const addTimestampAndPersonsCount = (req, res, next) => {
   res.locals.personsCount = persons.length;
   next();
 };
-
-app.use(addTimestampAndPersonsCount);
-
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-];
 
 app.get('/', (req, res) => {
   res.send('<h1>hi there, im learning express</h1>');
@@ -74,13 +49,13 @@ app.get('/api/persons/:id', (req, res) => {
     });
 });
 
-//prettier-ignore
-const generatedId = () => {
-  const maxId = persons.length > 0 
-    ? Math.max(...persons.map(p => p.id))
-    : 0;
-  return maxId + 1;
-};
+app.get('/info', (req, res) => {
+  const timestamp = res.locals.timestamp;
+  const personsCount = res.locals.personsCount;
+  res.send(
+    `Phonebook has info for ${personsCount} people<br>The request was received at: ${timestamp}`
+  );
+});
 
 app.post('/api/persons', (req, res) => {
   //extract the body of the req
@@ -104,27 +79,20 @@ app.post('/api/persons', (req, res) => {
   person.save().then((savedPerson) => {
     res.json(savedPerson);
   });
-
-  persons = persons.concat(person);
-
-  console.log(req.body);
-  res.json(person);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((person) => person.id !== id);
-
-  res.status(204).end();
+  Person.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
-app.get('/info', (req, res) => {
-  const timestamp = res.locals.timestamp;
-  const personsCount = res.locals.personsCount;
-  res.send(
-    `Phonebook has info for ${personsCount} people<br>The request was received at: ${timestamp}`
-  );
-});
+app.use(addTimestampAndPersonsCount);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

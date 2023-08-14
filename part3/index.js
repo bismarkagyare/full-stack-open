@@ -64,7 +64,7 @@ app.get('/info', (req, res) => {
 });
 
 app.post('/api/persons', (req, res) => {
-  //extract the body of the req
+  // Extract the body of the req
   const { name, number } = req.body;
   if (!name || !number) {
     return res.status(400).json({
@@ -72,19 +72,25 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  const existingPerson = persons.find((person) => person.name === name);
-  if (existingPerson) {
-    res.status(409).json({ error: 'Name already exist' });
-  }
+  Person.findOne({ name: name })
+    .then((existingPerson) => {
+      if (existingPerson) {
+        res.status(409).json({ error: 'Name already exists' });
+      } else {
+        const person = new Person({
+          name: name,
+          number: number,
+        });
 
-  const person = new Person({
-    name: name,
-    number: number,
-  });
-
-  person.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+        person.save().then((savedPerson) => {
+          res.json(savedPerson);
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('Error checking existing person:', error.message);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
 app.delete('/api/persons/:id', (req, res) => {

@@ -1,37 +1,27 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const Blog = require('./models/blog');
 
 app.use(express.json());
 app.use(cors());
-
-const blogs = [
-  {
-    title: 'Modern Family',
-    author: 'Phil Dunphy',
-    url: 'www.modernfamily.com',
-    likes: 23,
-  },
-  {
-    title: 'Game of Thrones',
-    author: 'George Martin',
-    url: 'www.gameofthrones.com',
-    likes: 12,
-  },
-];
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
 app.get('/api/blogs', (request, response) => {
-  response.json(blogs);
+  Blog.find({}).then((blogs) => {
+    response.json(blogs);
+  });
 });
 
 app.post('/api/blogs', (request, response) => {
-  const blog = request.body;
-  console.log(blog);
-  response.json(blog);
+  const blog = new Blog(request.body);
+  blog.save().then((savedBlog) => {
+    response.status(201).json(savedBlog);
+  });
 });
 
 const PORT = process.env.PORT || 3003;

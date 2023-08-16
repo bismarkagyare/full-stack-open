@@ -73,3 +73,21 @@ describe('total likes', () => {
     expect(result).toBe(36);
   });
 });
+
+describe('favorite blog', () => {
+  test('returns the blog with the most likes', () => {
+    const result = listHelper.favoriteBlog(blogs);
+    expect(result).toEqual(blogs[2]);
+  });
+
+  test('returns null for an empty array', () => {
+    const result = listHelper.favoriteBlog([]);
+    expect(result).toBeNull();
+  });
+
+  test('returns the only blog in the array with one blog', () => {
+    const singleBlogArray = [blogs[1]];
+    const result = listHelper.favoriteBlog(singleBlogArray);
+    expect(result).toEqual(blogs[1]);
+  });
+});

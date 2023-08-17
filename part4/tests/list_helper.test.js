@@ -91,3 +91,27 @@ describe('favorite blog', () => {
     expect(result).toEqual(blogs[1]);
   });
 });
+
+describe('most blogs', () => {
+  test('returns the author with most blogs and their count', () => {
+    const result = listHelper.mostBlogs(blogs);
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
+    });
+  });
+
+  test('returns the only author if there is one blog', () => {
+    const onlyBlog = [blogs[0]];
+    const result = listHelper.mostBlogs(onlyBlog);
+    expect(result).toEqual({
+      author: 'Michael Chan',
+      blogs: 1,
+    });
+  });
+
+  test('returns an empty object for an empty array', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual({});
+  });
+});

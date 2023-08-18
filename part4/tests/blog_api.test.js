@@ -122,6 +122,26 @@ test('likes property defaults to 0 if missing', async () => {
   expect(addedBlog.likes).toBe(0);
 });
 
+test('missing title results in 400 Bad Request', async () => {
+  const newBlog = {
+    author: 'John Doe',
+    url: 'http://example.com',
+    likes: 10,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('missing url results in 400 Bad Request', async () => {
+  const newBlog = {
+    title: 'Test Blog',
+    author: 'Jane Doe',
+    likes: 10,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

@@ -3,28 +3,13 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
-
-const initialBlogs = [
-  {
-    title: 'React patterns',
-    author: 'Michael Chan',
-    url: 'https://reactpatterns.com/',
-    likes: 7,
-  },
-  {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 5,
-  },
-];
+const helper = require('./test_helper');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  let blogObject = new Blog(initialBlogs[0]);
-  await blogObject.save();
-  blogObject = new Blog(initialBlogs[1]);
-  await blogObject.save();
+  const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog));
+  const promiseArray = blogObjects.map((blog) => blog.save());
+  await Promise.all(promiseArray);
 });
 
 test('blogs are returned as json', async () => {
@@ -36,7 +21,7 @@ test('blogs are returned as json', async () => {
 
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs');
-  expect(response.body).toHaveLength(initialBlogs.length);
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
 }, 100000);
 
 test('the first blog is about react patterns', async () => {
@@ -54,7 +39,7 @@ test('unique identifier prooperty is named id', async () => {
   });
 });
 
-test('a valid blog is added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'First class tests',
     author: 'Robert C. Martin',
@@ -70,7 +55,7 @@ test('a valid blog is added', async () => {
 
   const response = await api.get('/api/blogs');
   const titles = response.body.map((r) => r.title);
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
   expect(titles).toContain('First class tests');
 });
 
@@ -140,6 +125,32 @@ test('missing url results in 400 Bad Request', async () => {
   };
 
   await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('a specific blog can be viewed', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToView = blogsAtStart[0];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+  expect(resultBlog).toEqual(blogToView);
+});
+
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const blogsAtEnd = await helper.notesInDb();
+
+  expect(blogsAtEnd).toHaveLength(helper.initialNotes.length - 1);
+
+  const titles = blogsAtEnd.map((r) => r.title);
+
+  expect(titles).not.toContain(blogToDelete.title);
 });
 
 afterAll(async () => {

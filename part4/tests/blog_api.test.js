@@ -74,6 +74,54 @@ test('a valid blog is added', async () => {
   expect(titles).toContain('First class tests');
 });
 
+// test('likes value defaults to 0 if missing', async () => {
+//   const newBlog = {
+//     title: 'TDD harms architecture',
+//     author: 'Robert C. Martin',
+//     url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+//   };
+
+//   await api
+//     .post('/api/blogs')
+//     .send(newBlog)
+//     .expect(201)
+//     .expect('Content-Type', /application\/json/);
+
+//   const response = await api.get('/api/blogs');
+//   const blogObjects = response.body;
+
+//   const updatedBlogObjects = blogObjects.map((obj) => {
+//     if (!obj.likes) {
+//       return { ...obj, likes: 0 };
+//     }
+//     return obj;
+//   });
+
+//   updatedBlogObjects.forEach((obj) => {
+//     expect(obj.likes).toBe(0);
+//   });
+// });
+
+test('likes property defaults to 0 if missing', async () => {
+  const newBlog = {
+    title: 'TDD harms architecture',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+  };
+
+  const response = await api.post('/api/blogs').send(newBlog);
+
+  expect(response.status).toBe(201);
+  expect(response.body.likes).toBe(0);
+
+  const allBlogs = await api.get('/api/blogs');
+  const addedBlog = allBlogs.body.find(
+    (blog) => blog.title === 'TDD harms architecture'
+  );
+
+  expect(addedBlog.likes).toBe(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

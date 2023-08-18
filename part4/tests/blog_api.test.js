@@ -17,37 +17,14 @@ const initialBlogs = [
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
   },
-  {
-    title: 'Canonical string reduction',
-    author: 'Edsger W. Dijkstra',
-    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-    likes: 12,
-  },
-  {
-    title: 'First class tests',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
-  },
-  {
-    title: 'TDD harms architecture',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
-    likes: 0,
-  },
-  {
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2,
-  },
 ];
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const blogObjects = initialBlogs.map((blog) => new Blog(blog));
-  const promiseArray = blogObjects.map((blog) => blog.save());
-  await Promise.all(promiseArray);
+  let blogObject = new Blog(initialBlogs[0]);
+  await blogObject.save();
+  blogObject = new Blog(initialBlogs[1]);
+  await blogObject.save();
 });
 
 test('blogs are returned as json', async () => {
@@ -57,17 +34,25 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/);
 }, 100000);
 
-test('there are five blogs', async () => {
+test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs');
   expect(response.body).toHaveLength(initialBlogs.length);
 }, 100000);
 
-test('the first blog is about friends', async () => {
+test('the first blog is about react patterns', async () => {
   const response = await api.get('/api/blogs');
 
   const titles = response.body.map((r) => r.title);
-  expect(titles).toContain('Friends');
+  expect(titles).toContain('React patterns');
 }, 100000);
+
+test('unique identifier prooperty is named id', async () => {
+  const response = await api.get('/api/blogs');
+  const ids = response.body.map((r) => r.id);
+  ids.forEach((id) => {
+    expect(id).toBeDefined();
+  });
+});
 
 afterAll(async () => {
   await mongoose.connection.close();

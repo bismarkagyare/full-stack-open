@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const blogRouter = require('./controllers/route');
+const usersRouter = require('./controllers/userRoute');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use(cors());
 app.use(middleware.requestLogger);
 
+app.use('/api/users', usersRouter);
 app.use('/api/blogs', blogRouter);
 
 app.use(middleware.unknownEndpoint);

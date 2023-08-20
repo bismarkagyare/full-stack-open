@@ -1,10 +1,7 @@
-POST http://localhost:3003/api/blogs HTTP/1.1
+POST http://localhost:3003/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Test Driven Development",
-  "author": "Robert Martin",
-  "url": "www.testdriven.com",
-  "likes": 67,
-  "userId": "64e203eb0aaa78ca7482fdf2"
+  "username": "mark",
+  "password": "bismark00"
 }

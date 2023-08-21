@@ -44,12 +44,13 @@ describe('Blog API tests', () => {
   });
 
   describe('addition of a blog', () => {
-    test('adds a valid blog', async () => {
+    test('adds a new blog with valid token', async () => {
       const newBlog = {
         title: 'First class tests',
         author: 'Robert C. Martin',
         url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html',
         likes: 10,
+        token: 'token goes here',
       };
 
       await api
@@ -62,6 +63,21 @@ describe('Blog API tests', () => {
       const titles = response.body.map((r) => r.title);
       expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
       expect(titles).toContain('First class tests');
+    });
+
+    test('fails with proper status code if token is missing', async () => {
+      const newBlog = {
+        title: 'New Blog Title',
+        author: 'John Doe',
+        url: 'http://example.com',
+        likes: 10,
+      };
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401) // Unauthorized status code
+        .expect('Content-Type', /application\/json/);
     });
 
     test('likes property defaults to 0 if missing', async () => {

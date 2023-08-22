@@ -18,13 +18,13 @@ blogRouter.get('/:id', async (request, response) => {
 });
 
 blogRouter.post('/', async (request, response) => {
-  const body = request.body;
-  const token = body.token;
-
   try {
+    const body = request.body;
+    const token = request.headers.authorization.split(' ')[1];
+
     const decodedToken = jwt.verify(token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token invalid' });
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'Token missing or invalid' });
     }
 
     const user = await User.findById(decodedToken.id);
@@ -34,15 +34,17 @@ blogRouter.post('/', async (request, response) => {
       author: body.author,
       url: body.url,
       likes: body.likes,
-      user: user.id,
+      user: user._id,
     });
 
     const savedBlog = await blog.save();
+
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
+
     response.status(201).json(savedBlog);
   } catch (error) {
-    response.status(401).json({ error: 'invalid token' });
+    response.status(500).json({ error: 'An error occurred' });
   }
 });
 

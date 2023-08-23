@@ -1,0 +1,18 @@
+.notification {
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  transition: opacity 0.3s ease;
+}
+
+.success {
+  color: #fff;
+  background: #4caf50;
+}
+
+.error {
+  color: #fff;
+  background: #f44336;
+}

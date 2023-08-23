@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Blog from '../components/Blog';
+import Notification from '../components/Notification';
 import blogService from '../services/blogs';
 import loginService from '../services/login';
+import './index.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,6 +15,8 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('some error..');
+  const [successMessage, setSuccessMessage] = useState(null);
 
   //prettier-ignore
   useEffect(() => {
@@ -41,7 +45,7 @@ const App = () => {
       url: url,
       likes: likes,
     };
-
+  
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
@@ -50,7 +54,14 @@ const App = () => {
         setAuthor('');
         setUrl('');
         setLikes('');
-    });
+        setSuccessMessage('a new blog is added')
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 4000);
+      })
+      .catch((error) => {
+        console.error('Error adding blog:', error);
+      });
   };
 
   const handleLogin = async (e) => {
@@ -64,7 +75,10 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (error) {
-      console.log(error);
+      setErrorMessage('wrong username or password');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 4000);
     }
   };
 
@@ -149,6 +163,8 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={errorMessage} type="error" />
+      <Notification message={successMessage} type="success" />
       {!isLoggedIn ? (
         loginForm() // Show login form when user is not logged in
       ) : (

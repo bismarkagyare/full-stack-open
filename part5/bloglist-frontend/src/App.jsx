@@ -12,6 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   //prettier-ignore
   useEffect(() => {
@@ -20,6 +21,15 @@ const App = () => {
       .then((initialBlogs) => {
         setBlogs(initialBlogs)
       });
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = localStorage.getItem('loggedBlogUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
   }, []);
 
   //prettier-ignore
@@ -47,13 +57,22 @@ const App = () => {
     e.preventDefault();
     try {
       const user = await loginService.login({ username, password });
+      window.localStorage.setItem('loggedBlogUser', JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
+      setIsLoggedIn(true);
       setUsername('');
       setPassword('');
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const logout = () => {
+    blogService.setToken(null);
+    window.localStorage.removeItem('loggedBlogUser');
+    setUser(null);
+    setIsLoggedIn(false);
   };
 
   const loginForm = () => {
@@ -130,10 +149,13 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      {!user && loginForm()}
-      {user && (
+      {!isLoggedIn ? (
+        loginForm() // Show login form when user is not logged in
+      ) : (
         <div>
-          <p>{user.name} logged in</p>
+          <p>
+            {user.name} logged in <button onClick={logout}>logout</button>
+          </p>
           {blogForm()}
         </div>
       )}

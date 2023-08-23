@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Blog from '../components/Blog';
 import Notification from '../components/Notification';
+import LoginForm from '../components/LoginForm';
+import BlogForm from '../components/BlogForm';
 import blogService from '../services/blogs';
 import loginService from '../services/login';
 import './index.css';
@@ -15,7 +17,7 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('some error..');
+  const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
 
   //prettier-ignore
@@ -89,90 +91,35 @@ const App = () => {
     setIsLoggedIn(false);
   };
 
-  const loginForm = () => {
-    return (
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    );
-  };
-
-  const blogForm = () => {
-    return (
-      <form onSubmit={addBlog}>
-        <h2>create new blogs</h2>
-        <div>
-          title
-          <input
-            type="text"
-            value={title}
-            name="title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input
-            type="text"
-            value={author}
-            name="author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url
-          <input
-            type="text"
-            value={url}
-            name="url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <div>
-          likes
-          <input
-            type="text"
-            value={likes}
-            name="likes"
-            onChange={({ target }) => setLikes(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    );
-  };
-
   return (
     <div>
       <h2>Blogs</h2>
       <Notification message={errorMessage} type="error" />
       <Notification message={successMessage} type="success" />
       {!isLoggedIn ? (
-        loginForm() // Show login form when user is not logged in
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />
       ) : (
         <div>
           <p>
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
-          {blogForm()}
+          <BlogForm
+            addBlog={addBlog}
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
+            likes={likes}
+            setLikes={setLikes}
+          />
         </div>
       )}
 

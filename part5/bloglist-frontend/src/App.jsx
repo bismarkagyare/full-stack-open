@@ -46,7 +46,8 @@ const App = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const user = loginService.login({ username, password });
+      const user = await loginService.login({ username, password });
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');

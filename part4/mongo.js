@@ -27,7 +27,6 @@ const blogSchema = new mongoose.Schema({
 const Blog = mongoose.model('Blog', blogSchema);
 
 if (process.argv.length === 3) {
-  // list all entries in the blog
   console.log('Blog entries');
   Blog.find({}).then((blogs) => {
     blogs.forEach((blog) => {

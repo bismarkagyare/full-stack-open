@@ -19,6 +19,8 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const [blogFormVisible, setBlogFormVisible] = useState(false);
 
   //prettier-ignore
   useEffect(() => {
@@ -96,30 +98,48 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification message={errorMessage} type="error" />
       <Notification message={successMessage} type="success" />
+
       {!isLoggedIn ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-        />
+        <div>
+          {!loginVisible ? (
+            <button onClick={() => setLoginVisible(true)}>Login</button>
+          ) : (
+            <div>
+              <LoginForm
+                handleLogin={handleLogin}
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+              />
+              <button onClick={() => setLoginVisible(false)}>Cancel</button>
+            </div>
+          )}
+        </div>
       ) : (
         <div>
           <p>
             {user.name} logged in <button onClick={logout}>logout</button>
           </p>
-          <BlogForm
-            addBlog={addBlog}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-            likes={likes}
-            setLikes={setLikes}
-          />
+
+          {!blogFormVisible ? (
+            <button onClick={() => setBlogFormVisible(true)}>New Blog</button>
+          ) : (
+            <div>
+              <BlogForm
+                addBlog={addBlog}
+                title={title}
+                setTitle={setTitle}
+                author={author}
+                setAuthor={setAuthor}
+                url={url}
+                setUrl={setUrl}
+                likes={likes}
+                setLikes={setLikes}
+              />
+              <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
+            </div>
+          )}
         </div>
       )}
 

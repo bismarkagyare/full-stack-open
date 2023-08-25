@@ -9,10 +9,6 @@ import './index.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
-  const [likes, setLikes] = useState('');
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -39,27 +35,16 @@ const App = () => {
   }, []);
 
   //prettier-ignore
-  const addBlog = (e) => {
-    e.preventDefault();
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-      likes: likes,
-    };
-  
+  const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog));
-        setTitle('');
-        setAuthor('');
-        setUrl('');
-        setLikes('');
         setSuccessMessage('a new blog is added')
         setTimeout(() => {
           setSuccessMessage(null)
         }, 4000);
+        setBlogFormVisible(false)
       })
       .catch((error) => {
         console.error('Error adding blog:', error);
@@ -115,17 +100,7 @@ const App = () => {
             <button onClick={() => setBlogFormVisible(true)}>New Blog</button>
           ) : (
             <div>
-              <BlogForm
-                addBlog={addBlog}
-                title={title}
-                setTitle={setTitle}
-                author={author}
-                setAuthor={setAuthor}
-                url={url}
-                setUrl={setUrl}
-                likes={likes}
-                setLikes={setLikes}
-              />
+              <BlogForm addBlog={addBlog} />
               <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
             </div>
           )}

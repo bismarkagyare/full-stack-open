@@ -13,8 +13,6 @@ const App = () => {
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
   const [likes, setLikes] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -68,16 +66,13 @@ const App = () => {
       });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async ({ username, password }) => {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
       setIsLoggedIn(true);
-      setUsername('');
-      setPassword('');
     } catch (error) {
       setErrorMessage('wrong username or password');
       setTimeout(() => {
@@ -105,13 +100,7 @@ const App = () => {
             <button onClick={() => setLoginVisible(true)}>Login</button>
           ) : (
             <div>
-              <LoginForm
-                handleLogin={handleLogin}
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
-              />
+              <LoginForm handleLogin={handleLogin} />
               <button onClick={() => setLoginVisible(false)}>Cancel</button>
             </div>
           )}

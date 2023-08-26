@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import blogService from '../services/blogs';
 import '../styles/Blog.css';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   const [showAll, setShowAll] = useState(false);
+
+  const handleLikeClick = () => {
+    handleLike(blog.id);
+  };
 
   return (
     <div className="blog">
@@ -22,7 +27,7 @@ const Blog = ({ blog }) => {
             </a>
           </p>
           <p className="blog-likes">
-            Likes: {blog.likes} <button>like</button>
+            Likes: {blog.likes} <button onClick={handleLikeClick}>like</button>
           </p>
         </>
       )}

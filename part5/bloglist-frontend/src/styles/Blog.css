@@ -1,0 +1,24 @@
+.blog-title {
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.blog-author,
+.blog-url,
+.blog-likes {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.blog-url a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.blog {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+}

@@ -66,6 +66,20 @@ const App = () => {
     }
   };
 
+  const handleLike = async (id) => {
+    const blogToLike = blogs.find((blog) => blog.id === id);
+    const updatedBlog = { ...blogToLike, likes: blogToLike.likes + 1 };
+
+    try {
+      //update the blog on the server side
+      //returnedBlog is the result object if request is successful
+      const returnedBlog = await blogService.update(id, updatedBlog);
+      setBlogs(blogs.map((blog) => (blog.id === id ? returnedBlog : blog)));
+    } catch (error) {
+      console.error('Error handling like', error);
+    }
+  };
+
   const logout = () => {
     blogService.setToken(null);
     window.localStorage.removeItem('loggedBlogUser');
@@ -109,7 +123,7 @@ const App = () => {
 
       <div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleLike={handleLike} />
         ))}
       </div>
     </div>

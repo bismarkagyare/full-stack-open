@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Blog from '../components/Blog';
-import Notification from '../components/Notification';
-import LoginForm from '../components/LoginForm';
-import BlogForm from '../components/BlogForm';
-import blogService from '../services/blogs';
-import loginService from '../services/login';
+import Blog from './components/Blog';
+import Notification from './components/Notification';
+import LoginForm from './components/LoginForm';
+import BlogForm from './components/BlogForm';
+import blogService from './services/blogs';
+import loginService from './services/login';
 import './index.css';
 
 const App = () => {

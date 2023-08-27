@@ -64,26 +64,24 @@ blogRouter.put('/:id', async (request, response) => {
 });
 
 blogRouter.delete('/:id', async (request, response) => {
-  const body = request.body;
-  const token = body.token;
-
   try {
+    const token = request.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, process.env.SECRET);
     const userId = decodedToken.id;
 
     const user = await User.findById(userId);
     if (!user) {
-      response.status(401).json({ error: 'invalid token' });
+      return response.status(401).json({ error: 'invalid token' });
     }
 
     const blog = await Blog.findById(request.params.id);
     if (!blog) {
-      response.status(401).json({ error: 'blog not found' });
+      return response.status(401).json({ error: 'blog not found' });
     }
 
     if (blog.user.toString() === userId) {
       await Blog.findByIdAndRemove(request.params.id);
-      response.status(204).end();
+      return response.status(204).end();
     } else {
       return response.status(403).json({ error: 'unauthorized' });
     }

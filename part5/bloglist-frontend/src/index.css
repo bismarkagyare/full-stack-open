@@ -12,7 +12,8 @@
   background: #4caf50;
 }
 
-.error {
+.error,
+.delete {
   color: #fff;
   background: #f44336;
 }

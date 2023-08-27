@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
 import '../styles/Blog.css';
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleRemove }) => {
   const [showAll, setShowAll] = useState(false);
 
   const handleLikeClick = () => {
     handleLike(blog.id);
+  };
+
+  const handleRemoveClick = () => {
+    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
+      handleRemove(blog.id);
+    }
   };
 
   return (
@@ -29,6 +34,7 @@ const Blog = ({ blog, handleLike }) => {
           <p className="blog-likes">
             Likes: {blog.likes} <button onClick={handleLikeClick}>like</button>
           </p>
+          <button onClick={handleRemoveClick}>Remove</button>
         </>
       )}
     </div>

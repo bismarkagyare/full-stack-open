@@ -29,6 +29,7 @@ const BlogForm = ({ addBlog }) => {
           type="text"
           value={title}
           name="title"
+          className="input"
           onChange={({ target }) => setTitle(target.value)}
         />
       </div>

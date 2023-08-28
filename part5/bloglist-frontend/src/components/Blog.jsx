@@ -9,9 +9,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
   };
 
   const handleRemoveClick = () => {
-    if (window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)) {
-      handleRemove(blog.id);
-    }
+    handleRemove(blog.id);
   };
 
   return (

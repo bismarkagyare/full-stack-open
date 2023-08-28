@@ -14,7 +14,6 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
-  const [deletionMessage, setDeletionMessage] = useState(null);
   const [loginVisible, setLoginVisible] = useState(false);
   const [blogFormVisible, setBlogFormVisible] = useState(false);
 
@@ -24,8 +23,8 @@ const App = () => {
       .getAll()
       .then((initialBlogs) => {
         setBlogs(initialBlogs)
-        // const sorted = sortBlogsByLikes(initialBlogs)
-        // setSortedBlogs(sorted)
+        const sorted = sortBlogsByLikes(initialBlogs);
+        setSortedBlogs(sorted);
       });
   }, []);
 
@@ -83,44 +82,21 @@ const App = () => {
       //returnedBlog is the result object if request is successful
       const returnedBlog = await blogService.update(id, updatedBlog);
       setBlogs(blogs.map((blog) => (blog.id === id ? returnedBlog : blog)));
-      // const sorted = sortBlogsByLikes(
-      //   blogs.map((blog) => (blog.id === id ? returnedBlog : blog))
-      // );
-      // setSortedBlogs(sorted);
+      setSortedBlogs(sortBlogsByLikes(blogs));
     } catch (error) {
       console.error('Error handling like', error);
     }
   };
 
-  // const handleDelete = (id) => {
-  //   const blogToDelete = blogs.find((blog) => blog.id === id);
-  //   if (blogToDelete && window.confirm(`Delete ${blogToDelete.title}`)) {
-  //     blogService
-  //       .deleteBlog(id)
-  //       .then(() => {
-  //         setDeletionMessage(`${blogToDelete.title} was removed`);
-  //         setTimeout(() => {
-  //           setDeletionMessage(null);
-  //         }, 3000);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error deleting blog', error);
-  //       });
-  //     setBlogs(blogs.filter((blog) => blog.id !== id));
-  //   }
-  // };
-
-  const handleRemove = async (id) => {
-    try {
-      await blogService.deleteBlog(id);
-      const updatedBlogs = blogs.filter((blog) => blog.id !== id);
-      setBlogs(updatedBlogs);
-      setSuccessMessage('Blog removed successfully');
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 4000);
-    } catch (error) {
-      console.error('Error removing blog:', error);
+  const handleDelete = async (id) => {
+    if (window.confirm('Do you really want to delete this blog?')) {
+      try {
+        await blogService.deleteBlog(id);
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+        setSortedBlogs(sortBlogsByLikes(blogs));
+      } catch (error) {
+        console.error('Error deleting blog', error);
+      }
     }
   };
 
@@ -166,12 +142,12 @@ const App = () => {
       )}
 
       <div>
-        {blogs.map((blog) => (
+        {sortedBlogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
             handleLike={handleLike}
-            handleRemove={handleRemove}
+            handleRemove={handleDelete}
           />
         ))}
       </div>

@@ -4,6 +4,7 @@ const initialState = {
   bad: 0,
 };
 
+//this function will be passed to the store
 const counterReducer = (state = initialState, action) => {
   console.log(action);
   switch (action.type) {

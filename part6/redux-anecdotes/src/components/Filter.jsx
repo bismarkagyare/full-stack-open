@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { filterChange } from '../reducers/filterReducer';
+import { setFilter } from '../reducers/filterReducer';
 
 const Filter = () => {
   const filter = useSelector((state) => state.filter);
@@ -7,7 +7,7 @@ const Filter = () => {
 
   const handleChange = (e) => {
     const filteredAnecdote = e.target.value;
-    dispatch(filterChange(filteredAnecdote));
+    dispatch(setFilter(filteredAnecdote));
   };
 
   const style = {

@@ -9,7 +9,6 @@ const AnecdoteForm = () => {
     },
   });
 
-  //for testing purposes
   const onCreate = (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
